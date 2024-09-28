@@ -52,6 +52,7 @@ class BinarySearchTree:
     ind: a number between 0 and n-1 (the number of nodes/objects)
     returns BinarySearchTree/Node or None
     '''
+    #THIS FUNCTION IS NOT CORRECT!!
     def select(self, ind):
         left_size = 0
         if self.left is not None:
@@ -61,7 +62,7 @@ class BinarySearchTree:
         if left_size > ind and self.left is not None:
             return self.left.select(ind)
         if left_size < ind and self.right is not None:
-            return self.right.select(ind)
+            return self.right.select(ind-left_size-1)
         return None
 
 
@@ -69,6 +70,7 @@ class BinarySearchTree:
     Searches for a given key
     returns a pointer to the object with target key or None (Roughgarden)
     '''
+    #THIS FUNCTION IS CORRECT!!
     def search(self, key):
         if self is None:
             return None
@@ -88,18 +90,21 @@ class BinarySearchTree:
     
     returns the original (top level) tree - allows for easy chaining in tests
     '''
+    #THIS FUNCTION IS TOO SLOW!!
     def insert(self, key):
         if self.key is None:
             self.key = key
+            self.size = 1
         elif self.key > key: 
             if self.left is None:
                 self.left = BinarySearchTree(self.debugger)
             self.left.insert(key)
+            self.size += 1
         elif self.key < key:
             if self.right is None:
                 self.right = BinarySearchTree(self.debugger)
             self.right.insert(key)
-        self.calculate_sizes()
+            self.size += 1
         return self
 
     
@@ -127,9 +132,42 @@ class BinarySearchTree:
        11 
     '''
     def rotate(self, direction, child_side):
-        # Your code goes here
-        return self
+        #Checking if the child has a side or if it is None
+        if child_side == "L":
+            child = self.left
+        elif child_side == "R":
+            child = self.right
+        elif child is None:
+            return self
 
+        # Left rotation 
+        if direction == "L":
+            if child_side == "R" and child.right:
+                new_child = child.right
+                child.right = new_child.left  
+                new_child.left = child  
+                self.right = new_child
+            elif child_side == "L" and child.left:
+                new_child = child.left
+                child.left = new_child.right  
+                new_child.right = child  
+                self.left = new_child  
+
+        # Right rotation 
+        if direction == "R":
+            if child_side == "L" and child.left:
+                new_child = child.left
+                child.left = new_child.right  
+                new_child.right = child  
+                self.left = new_child  
+            elif child_side == "R" and child.right:
+                new_child = child.right
+                child.right = new_child.left  
+                new_child.left = child  
+                self.right = new_child 
+
+        return self  
+    
     def print_bst(self):
         if self.left is not None:
             self.left.print_bst()
