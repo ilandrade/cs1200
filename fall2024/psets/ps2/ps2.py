@@ -132,45 +132,52 @@ class BinarySearchTree:
        11 
     '''
     def rotate(self, direction, child_side):
-        #Checking if the child has a side or if it is None
         if child_side == "L":
-            child = self.left
+            rotating_child = self.left  
         elif child_side == "R":
-            child = self.right
+            rotating_child = self.right  
         else:
             return self  
-        
-    # Ensure that there is a valid child to rotate
-        if child is None:
+
+    # Ensure the child being rotated exists
+        if rotating_child is None:
             return self
-        
-        # Left rotation 
+       
+        # Left Rotation
         if direction == "L":
-            if child_side == "R" and child.right:
-                new_child = child.right
-                child.right = new_child.left  
-                new_child.left = child  
-                self.right = new_child
-            elif child_side == "L" and child.left:
-                new_child = child.left
-                child.left = new_child.right  
-                new_child.right = child  
-                self.left = new_child  
+            new_subtree_root = rotating_child.right 
+            if new_subtree_root is None:
+                return self  
+        
+            rotating_child.right = new_subtree_root.left  
+            new_subtree_root.left = rotating_child  
 
-        # Right rotation 
+        # Update parent's child to point to new_subtree_root
+            if child_side == "L":
+                self.left = new_subtree_root 
+            else:
+                self.right = new_subtree_root  
+    
+        #Right Rotation
         elif direction == "R":
-            if child_side == "L" and child.left:
-                new_child = child.left
-                child.left = new_child.right  
-                new_child.right = child  
-                self.left = new_child  
-            elif child_side == "R" and child.right:
-                new_child = child.right
-                child.right = new_child.left  
-                new_child.left = child  
-                self.right = new_child 
+            new_subtree_root = rotating_child.left  
+            if new_subtree_root is None:
+                return self  
+        
+            rotating_child.left = new_subtree_root.right 
+            new_subtree_root.right = rotating_child  
 
-        return self  
+        # Update parent's child to point to new_subtree_root
+            if child_side == "L":
+                self.left = new_subtree_root  
+            else:
+                self.right = new_subtree_root 
+
+        if rotating_child is not None:
+            rotating_child.size = 1 + (rotating_child.left.size if rotating_child.left else 0) + (rotating_child.right.size if rotating_child.right else 0)
+        if new_subtree_root is not None:
+            new_subtree_root.size = 1 + (new_subtree_root.left.size if new_subtree_root.left else 0) + (new_subtree_root.right.size if new_subtree_root.right else 0)
+        return self  # Return the modified tree
     
     def print_bst(self):
         if self.left is not None:
