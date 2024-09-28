@@ -137,9 +137,13 @@ class BinarySearchTree:
             child = self.left
         elif child_side == "R":
             child = self.right
-        elif child is None:
+        else:
+            return self  
+        
+    # Ensure that there is a valid child to rotate
+        if child is None:
             return self
-
+        
         # Left rotation 
         if direction == "L":
             if child_side == "R" and child.right:
