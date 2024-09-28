@@ -154,7 +154,7 @@ class BinarySearchTree:
                 self.left = new_child  
 
         # Right rotation 
-        if direction == "R":
+        elif direction == "R":
             if child_side == "L" and child.left:
                 new_child = child.left
                 child.left = new_child.right  
