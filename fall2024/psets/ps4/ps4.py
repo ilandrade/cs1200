@@ -23,30 +23,27 @@ returns: An key-value pair (Kj, Vj) such that Kj is an i’th smallest key.
 
 
 def QuickSelect(arr, i):
-    if len(arr) <= 0:
+    if len (arr)==0:
+        return (0,-1)
+    if len(arr) == 1:
         return arr[0]
+    p = random.randint(0, len(arr) - 1)
+    pivot = arr[p]
+
+    aSmaller = [x for x in arr if x < pivot]
+    aEqual = [x for x in arr if x == pivot]
+    aLarger = [x for x in arr if x > pivot]
+    
+    lenSmaller = len(aSmaller)
+    lenEqual = len(aEqual)
+
+    if i < lenSmaller:
+        return QuickSelect(aSmaller, i)
+    elif i < lenSmaller + lenEqual:
+        return aEqual[0] 
     else:
-        # Randomly select a pivot index
-        p = random.randint(0, len(arr) - 1)
-        pivot = arr[p]
-
-    # Partition the array into smaller, equal, and larger parts
-        aSmaller = [x for x in arr if x < pivot]
-        aEqual = [x for x in arr if x == pivot]
-        aLarger = [x for x in arr if x > pivot]
-
-    # Get the sizes of the partitions
-        len_smaller = len(aSmaller)
-        len_equal = len(aEqual)
-
-    # Determine where the i-th smallest element is and recurse accordingly
-        if i < len_smaller:
-            return QuickSelect(aSmaller, i)
-        elif i < len_smaller + len_equal:
-            return aEqual[0]  # The pivot is the i-th smallest element
-        else:
-            return QuickSelect(aLarger, i - len_smaller - len_equal)
-
+        return QuickSelect(aLarger, i - lenSmaller - lenEqual)
+    pass
 
 
     # Feel free to use get_random_index(arr) or get_random_int(start_inclusive, end_inclusive)
@@ -69,9 +66,11 @@ NOTE: This is different from the QuickSelect definition. This function takes in 
 def MergeSortSelect(arr, query_list):
     # Only call MergeSort once
     # ... MergeSort has already been implemented for you (see below)
-    pass
-    return [(0, -1)] * len(query_list)  # replace this line with your return
-
+    sorted_arr = MergeSort(arr)
+    result = []
+    for query in query_list:
+        result.append(sorted_arr[query])
+    return result
 
 ##################################
 #                                #
@@ -82,7 +81,7 @@ def MergeSortSelect(arr, query_list):
 
 def experiments():
     # Edit this parameter
-    k = [1, 1, 1, 1, 1]
+    k = [13, 27, 35, 48, 65]
 
     # Feel free to edit these initial parameters
 
