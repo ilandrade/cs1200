@@ -12,14 +12,6 @@ random.seed(120)
 # Make Sure to Read the README
 #
 
-
-####################
-#                  #
-# Your Code Here   #
-#                  #
-####################
-
-
 '''
 A Las Vegas Algorithm to find a key-value pair (Ij, Kj) such that Kj is an i’th smallest key.
 arr: a list of key-value pair tuples
@@ -31,12 +23,35 @@ returns: An key-value pair (Kj, Vj) such that Kj is an i’th smallest key.
 
 
 def QuickSelect(arr, i):
-    # Your code here
+    if len(arr) <= 0:
+        return arr[0]
+    else:
+        # Randomly select a pivot index
+        p = random.randint(0, len(arr) - 1)
+        pivot = arr[p]
+
+    # Partition the array into smaller, equal, and larger parts
+        aSmaller = [x for x in arr if x < pivot]
+        aEqual = [x for x in arr if x == pivot]
+        aLarger = [x for x in arr if x > pivot]
+
+    # Get the sizes of the partitions
+        len_smaller = len(aSmaller)
+        len_equal = len(aEqual)
+
+    # Determine where the i-th smallest element is and recurse accordingly
+        if i < len_smaller:
+            return QuickSelect(aSmaller, i)
+        elif i < len_smaller + len_equal:
+            return aEqual[0]  # The pivot is the i-th smallest element
+        else:
+            return QuickSelect(aLarger, i - len_smaller - len_equal)
+
+
 
     # Feel free to use get_random_index(arr) or get_random_int(start_inclusive, end_inclusive)
     # ... see the helper functions below
-    pass
-    return (0, -1)
+    
 
 
 '''
