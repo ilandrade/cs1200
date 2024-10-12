@@ -23,10 +23,12 @@ returns: An key-value pair (Kj, Vj) such that Kj is an i’th smallest key.
 
 
 def QuickSelect(arr, i):
-    if len (arr)==0:
-        return (0,-1)
+    if len(arr) == 0:
+        return (0, -1)
+    
     if len(arr) == 1:
         return arr[0]
+    
     p = random.randint(0, len(arr) - 1)
     pivot = arr[p]
 
@@ -38,13 +40,11 @@ def QuickSelect(arr, i):
     lenEqual = len(aEqual)
 
     if i < lenSmaller:
-        return QuickSelect(aSmaller, i)
+        return QuickSelect(aSmaller, i)  
     elif i < lenSmaller + lenEqual:
         return aEqual[0] 
     else:
         return QuickSelect(aLarger, i - lenSmaller - lenEqual)
-    pass
-
 
     # Feel free to use get_random_index(arr) or get_random_int(start_inclusive, end_inclusive)
     # ... see the helper functions below
@@ -66,11 +66,9 @@ NOTE: This is different from the QuickSelect definition. This function takes in 
 def MergeSortSelect(arr, query_list):
     # Only call MergeSort once
     # ... MergeSort has already been implemented for you (see below)
-    sorted_arr = MergeSort(arr)
-    result = []
-    for query in query_list:
-        result.append(sorted_arr[query])
-    return result
+    sortedArr = MergeSort(arr)  
+    return [sortedArr[i] for i in query_list]  # replace this line with your return
+
 
 ##################################
 #                                #
@@ -81,11 +79,11 @@ def MergeSortSelect(arr, query_list):
 
 def experiments():
     # Edit this parameter
-    k = [13, 27, 35, 48, 65]
+    k = [3, 13, 27, 45, 65]
 
     # Feel free to edit these initial parameters
 
-    RUNS = 20  # Number of runs for each trial; more runs means better distributions approximation but longer experiment
+    RUNS = 25  # Number of runs for each trial; more runs means better distributions approximation but longer experiment
     HEIGHT = 1.5  # Height of a chart
     WIDTH = 3   # Width of a chart
     # Determines if subcharts share the same axis scale/limits
