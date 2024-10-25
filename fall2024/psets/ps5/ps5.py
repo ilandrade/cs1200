@@ -167,9 +167,34 @@ def bfs_2_coloring(G, precolored_nodes=None):
     
     # TODO: Complete this function by implementing two-coloring using the colors 0 and 1.
     # If there is no valid coloring, reset all the colors to None using G.reset_colors()
-    
-    G.reset_colors()
-    return None
+    for start_node in range(G.N):
+        if start_node not in visited:
+            # Start BFS from this unvisited node and attempt coloring
+            queue = [(start_node, 0)]  # (node, color)
+            G.colors[start_node] = 0   # Start coloring with color 0
+            visited.add(start_node)
+            
+            while queue:
+                current_node, current_color = queue.pop(0)
+                
+                # Explore the neighbors
+                for neighbor in G.neighbors(current_node):
+                    if neighbor in visited:
+                        # Check if the coloring is valid
+                        if G.colors[neighbor] == current_color:
+                            # If a neighbor has the same color, reset and return None
+                            G.reset_colors()
+                            return None
+                    else:
+                        # Assign the neighbor the opposite color
+                        next_color = 1 - current_color
+                        G.colors[neighbor] = next_color
+                        visited.add(neighbor)
+                        queue.append((neighbor, next_color))
+
+
+    return G.reset_colors()
+     
 
 
 
