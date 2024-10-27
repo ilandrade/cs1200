@@ -167,34 +167,38 @@ def bfs_2_coloring(G, precolored_nodes=None):
     
     # TODO: Complete this function by implementing two-coloring using the colors 0 and 1.
     # If there is no valid coloring, reset all the colors to None using G.reset_colors()
+
+    # Begining of BFS to attempt 2-coloring with colors 0 and 1
     for start_node in range(G.N):
         if start_node not in visited:
-            # Start BFS from this unvisited node and attempt coloring
-            queue = [(start_node, 0)]  # (node, color)
-            G.colors[start_node] = 0   # Start coloring with color 0
+            # Initialize layer with the root node, starting with color 0
+            layer = {start_node} 
+            G.colors[start_node] = 0  
             visited.add(start_node)
-            
-            while queue:
-                current_node, current_color = queue.pop(0)
-                
-                # Explore the neighbors
-                for neighbor in G.neighbors(current_node):
-                    if neighbor in visited:
-                        # Check if the coloring is valid
-                        if G.colors[neighbor] == current_color:
-                            # If a neighbor has the same color, reset and return None
+
+            while layer:
+                next_layer = set()
+
+                for node in layer:
+                    current_color = G.colors[node]
+                    next_color = 1 - current_color 
+
+                    # Process each neighbor to the edge of color tree (so many steps omg)
+                    for neighbor in G.edges[node]:
+                        if neighbor not in visited:
+                            G.colors[neighbor] = next_color
+                            visited.add(neighbor)
+                            next_layer.add(neighbor)
+                        elif G.colors[neighbor] == current_color:
+                            # If we find a conflict then reset colors and return nothing
                             G.reset_colors()
                             return None
-                    else:
-                        # Assign the neighbor the opposite color
-                        next_color = 1 - current_color
-                        G.colors[neighbor] = next_color
-                        visited.add(neighbor)
-                        queue.append((neighbor, next_color))
-
-
-    return G.reset_colors()
-     
+                
+                #Moving to next layer!!!
+                layer = next_layer  
+                
+    #YAY WE SUCCEFULLY FINISHED
+    return G.colors
 
 
 
@@ -211,8 +215,22 @@ def bfs_2_coloring(G, precolored_nodes=None):
 # If successful, modifies G.colors and returns the coloring.
 # If no coloring is possible, resets all of G's colors to None and returns None.
 def iset_bfs_3_coloring(G):
-    # TODO: Complete this function.
-
+ # Iterate through all maximal independent sets
+    for independent_set in get_maximal_isets(G):
+        # Attempt to color the independent set nodes with color 2
+        for node in independent_set:
+            G.colors[node] = 2 
+        
+        # Try to 2-color the rest of the graph with precolored independent set
+        # If successful, modifies G.colors and returns the coloring.
+        if bfs_2_coloring(G, precolored_nodes=independent_set) is not None:
+            return G.colors
+        
+        # If no coloring is possible, resets all of G's colors to None and returns None.
+        for node in independent_set:
+            G.colors[node] = None
+    
+    # If no valid coloring was found, reset all colors and return None
     G.reset_colors()
     return None
 
